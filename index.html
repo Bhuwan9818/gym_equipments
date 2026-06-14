@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONFORGE — Premium Gym Equipment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --off-white: #F5F0E8;
+    --gold: #C8A96E;
+    --gold-light: #E2C88A;
+    --dark-card: #111111;
+    --mid: #1E1E1E;
+    --text-muted: #888;
+    --red: #C0392B;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-accent: 'Montserrat', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--off-white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    pointer-events: none;
+  }
+  .cursor-dot {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background 0.3s, transform 0.15s;
+    opacity: 0.6;
+  }
+  body:has(a:hover) .cursor-ring,
+  body:has(button:hover) .cursor-ring {
+    width: 56px; height: 56px; opacity: 0.3; background: var(--gold);
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 4rem;
+    transition: background 0.4s, backdrop-filter 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(20px);
+    padding: 1rem 4rem;
+    border-bottom: 1px solid rgba(200,169,110,0.15);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.12em;
+    color: var(--off-white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+    font-family: var(--font-accent);
+    font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .nav-links a {
+    color: rgba(245,240,232,0.7);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px; background: var(--gold);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--off-white); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-family: var(--font-accent);
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 0.75rem 1.8rem;
+    border: none; border-radius: 0;
+    cursor: none;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .nav-cta:hover { background: var(--gold-light); transform: scale(1.04); }
+
+  /* hamburger */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 26px; height: 2px; background: var(--off-white); transition: 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* mobile nav drawer */
+  .mobile-nav {
+    position: fixed; inset: 0; background: var(--black); z-index: 999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2.5rem; opacity: 0; pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  .mobile-nav.open { opacity: 1; pointer-events: all; }
+  .mobile-nav a {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    letter-spacing: 0.08em;
+    color: var(--off-white); text-decoration: none;
+    transition: color 0.3s;
+  }
+  .mobile-nav a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh; min-height: 600px;
+    display: flex; align-items: flex-end; justify-content: flex-start;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1000 50%, #0a0a0a 100%);
+  }
+  /* Animated grain overlay */
+  .hero-grain {
+    position: absolute; inset: 0; z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4; pointer-events: none;
+  }
+  /* Geometric shapes */
+  .hero-geo {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
+  }
+  .geo-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(200,169,110,0.08);
+    animation: rotate-slow 30s linear infinite;
+  }
+  .geo-circle:nth-child(1) { width: 700px; height: 700px; top: -200px; right: -150px; }
+  .geo-circle:nth-child(2) { width: 400px; height: 400px; top: 10%; right: 5%; border-color: rgba(200,169,110,0.12); animation-direction: reverse; animation-duration: 20s; }
+  .geo-line {
+    position: absolute; width: 1px; background: linear-gradient(to bottom, transparent, rgba(200,169,110,0.3), transparent);
+    animation: line-pulse 4s ease-in-out infinite;
+  }
+  .geo-line:nth-child(3) { height: 200px; top: 20%; right: 30%; animation-delay: 1s; }
+  .geo-line:nth-child(4) { height: 150px; top: 50%; right: 20%; animation-delay: 2.5s; }
+  @keyframes rotate-slow { to { transform: rotate(360deg); } }
+  @keyframes line-pulse { 0%,100% { opacity: 0; } 50% { opacity: 1; } }
+
+  /* Big BG text */
+  .hero-bg-text {
+    position: absolute; bottom: -2vw; left: -1vw; z-index: 1;
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 20vw, 18rem);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(200,169,110,0.06);
+    letter-spacing: 0.05em;
+    user-select: none; pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 4rem 6rem;
+    max-width: 900px;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-accent);
+    font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold);
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0; transform: translateY(20px);
+    animation: fade-up 0.8s forwards 0.3s;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block;
+    width: 40px; height: 1px; background: var(--gold);
+  }
+  .hero-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.8rem;
+  }
+  .hero-h1 .line {
+    display: block; overflow: hidden;
+  }
+  .hero-h1 .line span {
+    display: block;
+    transform: translateY(110%);
+    animation: slide-up 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .hero-h1 .line:nth-child(1) span { animation-delay: 0.5s; }
+  .hero-h1 .line:nth-child(2) span { animation-delay: 0.7s; }
+  .hero-h1 .line:nth-child(3) span { animation-delay: 0.9s; }
+  .hero-h1 .gold { color: var(--gold); }
+
+  .hero-sub {
+    font-size: 1rem; color: rgba(245,240,232,0.55);
+    max-width: 420px; line-height: 1.7;
+    font-weight: 300;
+    opacity: 0; animation: fade-up 0.8s forwards 1.2s;
+    margin-bottom: 2.5rem;
+  }
+  .hero-actions {
+    display: flex; align-items: center; gap: 1.5rem;
+    opacity: 0; animation: fade-up 0.8s forwards 1.4s;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    font-family: var(--font-accent); font-size: 0.82rem;
+    font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--gold); color: var(--black);
+    padding: 1.1rem 2.5rem; border: none; cursor: none;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,169,110,0.25); }
+  .btn-secondary {
+    font-family: var(--font-accent); font-size: 0.82rem;
+    font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--off-white); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    border-bottom: 1px solid rgba(245,240,232,0.3);
+    padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .btn-secondary:hover { color: var(--gold); border-color: var(--gold); }
+  .btn-arrow { font-size: 1rem; }
+
+  /* Hero stats strip */
+  .hero-stats {
+    position: absolute; bottom: 0; right: 0; z-index: 2;
+    display: flex; gap: 0;
+    opacity: 0; animation: fade-in 1s forwards 1.6s;
+  }
+  .stat-item {
+    padding: 1.4rem 2rem;
+    background: rgba(200,169,110,0.08);
+    border: 1px solid rgba(200,169,110,0.12);
+    border-right: none;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+  .stat-item:last-child { border-right: 1px solid rgba(200,169,110,0.12); }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem; letter-spacing: 0.05em;
+    color: var(--gold); display: block;
+  }
+  .stat-label {
+    font-family: var(--font-accent); font-size: 0.65rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+  }
+
+  @keyframes fade-up { to { opacity: 1; transform: none; } }
+  @keyframes slide-up { to { transform: none; } }
+  @keyframes fade-in { to { opacity: 1; } }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fade-in 1s forwards 2s;
+  }
+  .scroll-indicator span {
+    font-family: var(--font-accent); font-size: 0.6rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scroll-drip 2s ease-in-out infinite;
+  }
+  @keyframes scroll-drip {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    50.01% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ── MARQUEE STRIP ── */
+  .marquee-strip {
+    background: var(--gold); padding: 0.9rem 0; overflow: hidden;
+    border-top: 1px solid var(--gold-light); border-bottom: 1px solid rgba(0,0,0,0.2);
+  }
+  .marquee-track {
+    display: flex; gap: 3rem;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-track span {
+    font-family: var(--font-accent); font-size: 0.72rem;
+    font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--black); flex-shrink: 0;
+  }
+  .marquee-track .dot { color: rgba(0,0,0,0.4); }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ── SECTIONS COMMON ── */
+  section { padding: 7rem 4rem; }
+
+  .section-eyebrow {
+    font-family: var(--font-accent); font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold);
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .section-eyebrow::before {
+    content: ''; width: 30px; height: 1px; background: var(--gold);
+  }
+  .section-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    letter-spacing: 0.04em; line-height: 0.95;
+  }
+
+  /* ── ABOUT / INTRO ── */
+  .intro {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+  }
+  .intro-left .section-h2 { margin-bottom: 1.5rem; }
+  .intro-left p {
+    color: rgba(245,240,232,0.55); line-height: 1.8; font-size: 0.95rem;
+    margin-bottom: 1rem; font-weight: 300;
+  }
+  .intro-left .btn-primary { margin-top: 1.5rem; display: inline-flex; }
+
+  .intro-right {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  .intro-card {
+    background: var(--dark-card);
+    border: 1px solid rgba(200,169,110,0.1);
+    padding: 2rem 1.5rem;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .intro-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(200,169,110,0.04), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .intro-card:hover { border-color: rgba(200,169,110,0.4); transform: translateY(-4px); }
+  .intro-card:hover::before { opacity: 1; }
+  .intro-card-icon {
+    font-size: 1.8rem; margin-bottom: 1rem;
+    filter: grayscale(0.3);
+  }
+  .intro-card h3 {
+    font-family: var(--font-accent); font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    margin-bottom: 0.5rem; color: var(--off-white);
+  }
+  .intro-card p {
+    font-size: 0.8rem; color: var(--text-muted); line-height: 1.6;
+  }
+  .intro-card.span2 { grid-column: span 2; }
+
+  /* ── PRODUCTS ── */
+  .products { background: var(--dark-card); }
+  .products-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 3.5rem; flex-wrap: wrap; gap: 1.5rem;
+  }
+  .products-header .section-h2 { max-width: 500px; }
+  .products-header p {
+    max-width: 300px; color: var(--text-muted);
+    font-size: 0.9rem; line-height: 1.7; font-weight: 300;
+  }
+
+  /* Category tabs */
+  .category-tabs {
+    display: flex; gap: 0.5rem; margin-bottom: 3rem; flex-wrap: wrap;
+  }
+  .tab-btn {
+    font-family: var(--font-accent); font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.6rem 1.4rem;
+    background: transparent; color: var(--text-muted);
+    border: 1px solid rgba(200,169,110,0.15); cursor: none;
+    transition: all 0.3s;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--gold); color: var(--black);
+    border-color: var(--gold);
+  }
+
+  .products-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px;
+  }
+  .product-card {
+    background: var(--black); position: relative;
+    overflow: hidden; cursor: none;
+    border: 1px solid rgba(200,169,110,0.06);
+    transition: border-color 0.3s;
+  }
+  .product-card:hover { border-color: rgba(200,169,110,0.3); }
+  .product-card-img {
+    aspect-ratio: 4/3; background: var(--mid);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .product-card-img svg { width: 60%; height: 60%; transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+  .product-card:hover .product-card-img svg { transform: scale(1.05) translateY(-4px); }
+
+  .product-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: flex-end; padding: 1.5rem;
+  }
+  .product-card:hover .product-overlay { opacity: 1; }
+  .product-overlay .enquire-btn {
+    font-family: var(--font-accent); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--gold); color: var(--black);
+    padding: 0.7rem 1.4rem; border: none; cursor: none; width: 100%;
+    transition: background 0.2s;
+  }
+  .product-overlay .enquire-btn:hover { background: var(--gold-light); }
+
+  .product-info { padding: 1.5rem; }
+  .product-tag {
+    font-family: var(--font-accent); font-size: 0.62rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.4rem;
+  }
+  .product-name {
+    font-family: var(--font-accent); font-size: 0.92rem; font-weight: 700;
+    color: var(--off-white); margin-bottom: 0.3rem;
+  }
+  .product-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+  .product-price {
+    font-family: var(--font-display); font-size: 1.4rem;
+    color: var(--gold); margin-top: 0.8rem; letter-spacing: 0.05em;
+  }
+  .product-price span { font-family: var(--font-body); font-size: 0.7rem; color: var(--text-muted); }
+
+  /* ── CATEGORY SHOWCASE ── */
+  .categories { padding: 0 4rem 7rem; }
+  .cat-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+  }
+  .cat-item {
+    position: relative; overflow: hidden; cursor: none;
+    aspect-ratio: 3/4;
+  }
+  .cat-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .cat-item:hover .cat-bg { transform: scale(1.08); }
+  .cat-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+  }
+  .cat-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1.5rem;
+  }
+  .cat-label {
+    font-family: var(--font-display); font-size: 1.4rem;
+    letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem;
+  }
+  .cat-count {
+    font-family: var(--font-accent); font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase;
+  }
+  .cat-arrow {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    width: 36px; height: 36px; border: 1px solid rgba(245,240,232,0.3);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    transform: translateX(0) rotate(-45deg);
+    transition: all 0.3s; opacity: 0;
+  }
+  .cat-item:hover .cat-arrow { opacity: 1; transform: translateX(0) rotate(0deg); }
+
+  /* SVG gym equipment illustrations */
+  .cat-bg-treadmill { background: linear-gradient(135deg, #1a1200, #0d0d0d); }
+  .cat-bg-bike { background: linear-gradient(135deg, #120014, #0d0d0d); }
+  .cat-bg-strength { background: linear-gradient(135deg, #001a0a, #0d0d0d); }
+  .cat-bg-functional { background: linear-gradient(135deg, #1a0800, #0d0d0d); }
+  .cat-bg-accessories { background: linear-gradient(135deg, #001220, #0d0d0d); }
+
+  /* ── FEATURE / CTA SECTION ── */
+  .feature-cta {
+    background: var(--mid); display: grid;
+    grid-template-columns: 1fr 1fr; min-height: 550px;
+    overflow: hidden;
+  }
+  .feature-cta-content {
+    padding: 6rem 5rem; display: flex; flex-direction: column; justify-content: center;
+  }
+  .feature-cta-content .section-h2 { margin-bottom: 1.5rem; }
+  .feature-cta-content p {
+    color: rgba(245,240,232,0.55); line-height: 1.8; font-size: 0.95rem;
+    font-weight: 300; margin-bottom: 2.5rem; max-width: 420px;
+  }
+  .cta-actions { display: flex; flex-direction: column; gap: 1rem; max-width: 320px; }
+  .cta-phone {
+    display: flex; align-items: center; gap: 1rem;
+    font-family: var(--font-display); font-size: 1.8rem;
+    letter-spacing: 0.05em; color: var(--gold); text-decoration: none;
+    transition: letter-spacing 0.3s;
+  }
+  .cta-phone:hover { letter-spacing: 0.1em; }
+  .cta-phone-icon {
+    width: 44px; height: 44px; border: 1px solid rgba(200,169,110,0.3);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    animation: pulse-ring 2s ease-in-out infinite;
+  }
+  @keyframes pulse-ring {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(200,169,110,0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(200,169,110,0); }
+  }
+  .cta-or { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .form-row { display: flex; gap: 0; }
+  .cta-input {
+    flex: 1; background: rgba(200,169,110,0.06);
+    border: 1px solid rgba(200,169,110,0.2); border-right: none;
+    padding: 0.9rem 1.2rem;
+    color: var(--off-white); font-family: var(--font-body); font-size: 0.85rem;
+    outline: none; transition: border-color 0.3s;
+  }
+  .cta-input:focus { border-color: var(--gold); }
+  .cta-input::placeholder { color: rgba(245,240,232,0.3); }
+  .cta-submit {
+    background: var(--gold); color: var(--black);
+    border: none; padding: 0.9rem 1.5rem;
+    font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; cursor: none;
+    transition: background 0.3s;
+  }
+  .cta-submit:hover { background: var(--gold-light); }
+
+  .feature-cta-visual {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1a1200, #050505);
+  }
+  .visual-main-svg { width: 80%; height: 80%; position: relative; z-index: 1; }
+  .visual-glow {
+    position: absolute; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(200,169,110,0.15) 0%, transparent 70%);
+    border-radius: 50%; animation: glow-pulse 3s ease-in-out infinite;
+  }
+  @keyframes glow-pulse {
+    0%,100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--black); }
+  .testimonials-header { margin-bottom: 3.5rem; }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px;
+  }
+  .testi-card {
+    background: var(--dark-card);
+    border: 1px solid rgba(200,169,110,0.08);
+    padding: 2.5rem 2rem;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+  }
+  .testi-card:hover { border-color: rgba(200,169,110,0.3); transform: translateY(-4px); }
+  .testi-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 1.2rem; letter-spacing: 0.1em; }
+  .testi-text {
+    font-size: 0.92rem; line-height: 1.7; color: rgba(245,240,232,0.7);
+    font-weight: 300; margin-bottom: 1.8rem;
+    font-style: italic;
+  }
+  .testi-author { display: flex; align-items: center; gap: 1rem; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--dark-card));
+    border: 1px solid rgba(200,169,110,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 1.1rem; color: var(--black);
+  }
+  .testi-name { font-family: var(--font-accent); font-size: 0.82rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .testi-role { font-size: 0.72rem; color: var(--text-muted); }
+  .testi-quote-icon {
+    position: absolute; top: 1.5rem; right: 1.8rem;
+    font-size: 3rem; color: rgba(200,169,110,0.08);
+    font-family: Georgia, serif; line-height: 1;
+  }
+
+  /* ── WHY US ── */
+  .why-us { background: var(--mid); }
+  .why-us-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    margin-top: 3.5rem;
+  }
+  .why-item {
+    padding: 2.5rem 2rem;
+    border: 1px solid rgba(200,169,110,0.08);
+    transition: border-color 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .why-item::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .why-item:hover { border-color: rgba(200,169,110,0.25); }
+  .why-item:hover::after { transform: scaleX(1); }
+  .why-num {
+    font-family: var(--font-display); font-size: 3.5rem; color: rgba(200,169,110,0.1);
+    line-height: 1; margin-bottom: 1rem;
+  }
+  .why-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .why-item h3 {
+    font-family: var(--font-accent); font-size: 0.88rem; font-weight: 700;
+    letter-spacing: 0.05em; margin-bottom: 0.7rem; color: var(--off-white);
+  }
+  .why-item p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; }
+
+  /* ── BRANDS ── */
+  .brands { padding: 4rem; border-top: 1px solid rgba(200,169,110,0.1); }
+  .brands-inner {
+    display: flex; align-items: center; gap: 4rem;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .brands-label {
+    font-family: var(--font-accent); font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-muted); white-space: nowrap;
+  }
+  .brand-logos { display: flex; gap: 4rem; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .brand-name {
+    font-family: var(--font-display); font-size: 1.2rem;
+    letter-spacing: 0.12em; color: rgba(245,240,232,0.2);
+    transition: color 0.3s; cursor: none;
+  }
+  .brand-name:hover { color: rgba(200,169,110,0.6); }
+
+  /* ── FLOATING CTA ── */
+  .floating-cta {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 500;
+    display: flex; flex-direction: column; gap: 0.8rem; align-items: flex-end;
+  }
+  .float-btn {
+    background: var(--gold); color: var(--black);
+    font-family: var(--font-accent); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.85rem 1.5rem; border: none; cursor: none;
+    text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 4px 20px rgba(200,169,110,0.3);
+    animation: float-pulse 3s ease-in-out infinite;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .float-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(200,169,110,0.4); }
+  @keyframes float-pulse {
+    0%,100% { box-shadow: 0 4px 20px rgba(200,169,110,0.3); }
+    50% { box-shadow: 0 4px 30px rgba(200,169,110,0.5); }
+  }
+  .float-whatsapp {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: #25D366; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; text-decoration: none; cursor: none;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+    transition: transform 0.2s;
+  }
+  .float-whatsapp:hover { transform: scale(1.1); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #050505;
+    border-top: 1px solid rgba(200,169,110,0.15);
+  }
+  .footer-top {
+    padding: 5rem 4rem 3rem;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 4rem;
+  }
+  .footer-brand .nav-logo { font-size: 2rem; display: block; margin-bottom: 1rem; text-decoration: none; }
+  .footer-brand p {
+    font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; max-width: 260px;
+    margin-bottom: 1.5rem;
+  }
+  .footer-social { display: flex; gap: 0.8rem; }
+  .social-btn {
+    width: 36px; height: 36px; border: 1px solid rgba(200,169,110,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; color: var(--text-muted); text-decoration: none;
+    transition: all 0.3s; cursor: none;
+  }
+  .social-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .footer-col h4 {
+    font-family: var(--font-accent); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-col ul a {
+    font-size: 0.82rem; color: var(--text-muted); text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-col ul a:hover { color: var(--off-white); }
+  .footer-contact-item {
+    display: flex; align-items: flex-start; gap: 0.8rem;
+    font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.8rem;
+  }
+  .footer-contact-item span:first-child { color: var(--gold); margin-top: 0.1rem; }
+
+  .footer-bottom {
+    padding: 1.5rem 4rem; border-top: 1px solid rgba(200,169,110,0.08);
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-bottom p { font-size: 0.75rem; color: rgba(245,240,232,0.25); }
+  .footer-legal { display: flex; gap: 2rem; }
+  .footer-legal a { font-size: 0.75rem; color: rgba(245,240,232,0.25); text-decoration: none; transition: color 0.3s; }
+  .footer-legal a:hover { color: var(--gold); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1200px) {
+    .products-grid { grid-template-columns: repeat(3, 1fr); }
+    .why-us-grid { grid-template-columns: repeat(2, 1fr); }
+    .cat-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 3rem; }
+  }
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    nav.scrolled { padding: 0.9rem 2rem; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 5rem 2rem; }
+    .categories { padding: 0 2rem 5rem; }
+    .hero-content { padding: 0 2rem 8rem; }
+    .hero-stats { position: static; margin-top: 2rem; flex-wrap: wrap; }
+    .intro { grid-template-columns: 1fr; gap: 3rem; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .feature-cta { grid-template-columns: 1fr; }
+    .feature-cta-visual { height: 300px; }
+    .footer-top { grid-template-columns: 1fr; gap: 2.5rem; padding: 3rem 2rem 2rem; }
+    .footer-bottom { padding: 1.5rem 2rem; }
+    .brands { padding: 3rem 2rem; }
+    .why-us-grid { grid-template-columns: 1fr 1fr; }
+    .hero-bg-text { font-size: clamp(4rem, 18vw, 8rem); }
+    .floating-cta { bottom: 1.5rem; right: 1.5rem; }
+  }
+  @media (max-width: 600px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .why-us-grid { grid-template-columns: 1fr; }
+    .cat-grid { grid-template-columns: 1fr 1fr; }
+    .intro-right { grid-template-columns: 1fr; }
+    .intro-card.span2 { grid-column: 1; }
+    .products-header { flex-direction: column; align-items: flex-start; }
+    .feature-cta-content { padding: 3rem 2rem; }
+    .hero-stats { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor">
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+</div>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#products" onclick="closeMobileNav()">Products</a>
+  <a href="#categories" onclick="closeMobileNav()">Categories</a>
+  <a href="#about" onclick="closeMobileNav()">About</a>
+  <a href="#testimonials" onclick="closeMobileNav()">Reviews</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  <a href="tel:+911800000000" class="btn-primary" style="font-size:1rem">📞 Call Us</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">IRON<span>FORGE</span></a>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="tel:+911800000000" class="nav-cta">📞 Get Quote</a>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-geo">
+    <div class="geo-circle"></div>
+    <div class="geo-circle"></div>
+    <div class="geo-line"></div>
+    <div class="geo-line"></div>
+  </div>
+  <div class="hero-bg-text">FORGE</div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Premium Gym Equipment</div>
+    <h1 class="hero-h1">
+      <div class="line"><span>BUILD YOUR</span></div>
+      <div class="line"><span>ULTIMATE <span class="gold">GYM</span></span></div>
+      <div class="line"><span>AT HOME</span></div>
+    </h1>
+    <p class="hero-sub">Transform any space into a world-class fitness sanctuary. Commercial-grade equipment engineered for peak performance and lasting durability.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Get Free Quote <span class="btn-arrow">→</span></a>
+      <a href="#products" class="btn-secondary">Explore Equipment <span class="btn-arrow">↓</span></a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">500+</span>
+      <span class="stat-label">Products</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">10K+</span>
+      <span class="stat-label">Happy Clients</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">15+</span>
+      <span class="stat-label">Years Experience</span>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span>Treadmills</span><span class="dot">✦</span>
+    <span>Strength Training</span><span class="dot">✦</span>
+    <span>Cardio Equipment</span><span class="dot">✦</span>
+    <span>Multi-Gyms</span><span class="dot">✦</span>
+    <span>Free Weights</span><span class="dot">✦</span>
+    <span>Functional Trainers</span><span class="dot">✦</span>
+    <span>Weight Benches</span><span class="dot">✦</span>
+    <span>Rowing Machines</span><span class="dot">✦</span>
+    <span>Elliptical Trainers</span><span class="dot">✦</span>
+    <span>Exercise Bikes</span><span class="dot">✦</span>
+    <!-- Duplicate for seamless loop -->
+    <span>Treadmills</span><span class="dot">✦</span>
+    <span>Strength Training</span><span class="dot">✦</span>
+    <span>Cardio Equipment</span><span class="dot">✦</span>
+    <span>Multi-Gyms</span><span class="dot">✦</span>
+    <span>Free Weights</span><span class="dot">✦</span>
+    <span>Functional Trainers</span><span class="dot">✦</span>
+    <span>Weight Benches</span><span class="dot">✦</span>
+    <span>Rowing Machines</span><span class="dot">✦</span>
+    <span>Elliptical Trainers</span><span class="dot">✦</span>
+    <span>Exercise Bikes</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ABOUT / INTRO -->
+<section id="about">
+  <div class="intro">
+    <div class="intro-left reveal">
+      <div class="section-eyebrow">Who We Are</div>
+      <h2 class="section-h2">ELEGANTLY DESIGNED.<br><span style="color:var(--gold)">FUELED BY</span><br>TECHNOLOGY.</h2>
+      <p>We are India's leading premium gym equipment supplier, bringing commercial-grade fitness technology to home gyms, professional fitness centres, and corporate wellness spaces.</p>
+      <p>Every piece in our collection is curated from the world's most respected fitness brands — engineered to perform, built to last, designed to impress.</p>
+      <a href="#contact" class="btn-primary">Request a Consultation →</a>
+    </div>
+    <div class="intro-right">
+      <div class="intro-card reveal reveal-delay-1">
+        <div class="intro-card-icon">🏋️</div>
+        <h3>Commercial Grade</h3>
+        <p>Built to the same standards as five-star hotel and professional athletic facilities.</p>
+      </div>
+      <div class="intro-card reveal reveal-delay-2">
+        <div class="intro-card-icon">🛡️</div>
+        <h3>5-Year Warranty</h3>
+        <p>Comprehensive warranty coverage with pan-India service support and spare parts.</p>
+      </div>
+      <div class="intro-card reveal reveal-delay-3">
+        <div class="intro-card-icon">🚀</div>
+        <h3>Expert Installation</h3>
+        <p>Certified technicians handle everything from delivery to setup and calibration.</p>
+      </div>
+      <div class="intro-card span2 reveal reveal-delay-4">
+        <div class="intro-card-icon">💎</div>
+        <h3>Bespoke Solutions</h3>
+        <p>Custom gym design services tailored to your space, budget, and fitness goals. Our design team creates a complete layout plan — at no cost.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="products-header reveal">
+    <div>
+      <div class="section-eyebrow">Our Collection</div>
+      <h2 class="section-h2">PREMIUM<br>EQUIPMENT</h2>
+    </div>
+    <p>Each product is hand-selected for its engineering excellence, ergonomic design, and long-term reliability. Prices on enquiry — we beat any quote.</p>
+  </div>
+
+  <div class="category-tabs reveal">
+    <button class="tab-btn active" onclick="filterProducts('all', this)">All</button>
+    <button class="tab-btn" onclick="filterProducts('cardio', this)">Cardio</button>
+    <button class="tab-btn" onclick="filterProducts('strength', this)">Strength</button>
+    <button class="tab-btn" onclick="filterProducts('functional', this)">Functional</button>
+    <button class="tab-btn" onclick="filterProducts('accessories', this)">Accessories</button>
+  </div>
+
+  <div class="products-grid" id="productsGrid">
+    <!-- Card 1 -->
+    <div class="product-card reveal" data-cat="cardio">
+      <div class="product-card-img">
+        <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Treadmill SVG -->
+          <rect x="20" y="85" width="160" height="8" rx="2" fill="#2a2a2a" stroke="#C8A96E" stroke-width="0.5"/>
+          <rect x="10" y="88" width="12" height="5" rx="1" fill="#1a1a1a"/>
+          <rect x="178" y="88" width="12" height="5" rx="1" fill="#1a1a1a"/>
+          <rect x="70" y="40" width="4" height="50" rx="1" fill="#C8A96E" opacity="0.7"/>
+          <rect x="126" y="40" width="4" height="50" rx="1" fill="#C8A96E" opacity="0.7"/>
+          <rect x="68" y="38" width="64" height="8" rx="2" fill="#1a1a1a" stroke="#C8A96E" stroke-width="0.5"/>
+          <rect x="80" y="30" width="40" height="12" rx="2" fill="#111" stroke="#C8A96E" stroke-width="0.5"/>
+          <rect x="85" y="33" width="30" height="6" rx="1" fill="#C8A96E" opacity="0.3"/>
+          <ellipse cx="30" cy="89" rx="8" ry="4" fill="#333" stroke="#555" stroke-width="0.5"/>
+          <ellipse cx="170" cy="89" rx="8" ry="4" fill="#333" stroke="#555" stroke-width="0.5"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="enquire-btn" onclick="enquire('Run Pro X9 Treadmill')">Enquire Now</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Cardio</div>
+        <div class="product-name">Run Pro X9 Treadmill</div>
+        <div class="product-desc">4HP AC motor · 20 incline levels · 22" touchscreen</div>
+        <div class="product-price">On Enquiry <span>/ Call for best price</span></div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="product-card reveal reveal-delay-1" data-cat="cardio">
+      <div class="product-card-img">
+        <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Exercise Bike -->
+          <circle cx="60" cy="90" r="22" fill="none" stroke="#C8A96E" stroke-width="1.5" opacity="0.7"/>
+          <circle cx="60" cy="90" r="8" fill="#1a1a1a" stroke="#C8A96E" stroke-width="0.8"/>
+          <circle cx="145" cy="95" r="16" fill="none" stroke="#555" stroke-width="1"/>
+          <circle cx="145" cy="95" r="6" fill="#1a1a1a" stroke="#555" stroke-width="0.8"/>
+          <line x1="60" y1="90" x2="100" y2="70" stroke="#888" stroke-width="2"/>
+          <line x1="100" y1="70" x2="145" y2="95" stroke="#888" stroke-width="2"/>
+          <rect x="95" y="40" width="4" height="32" rx="1" fill="#C8A96E" opacity="0.8"/>
+          <rect x="80" y="36" width="34" height="10" rx="3" fill="#111" stroke="#C8A96E" stroke-width="0.5"/>
+          <rect x="84" y="39" width="26" height="4" rx="1" fill="#C8A96E" opacity="0.3"/>
+          <rect x="90" y="65" width="20" height="10" rx="2" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="enquire-btn" onclick="enquire('Aria Pro Spin Bike')">Enquire Now</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Cardio</div>
+        <div class="product-name">Aria Pro Spin Bike</div>
+        <div class="product-desc">Magnetic resistance · 100 levels · Bluetooth connectivity</div>
+        <div class="product-price">On Enquiry <span>/ Call for best price</span></div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="product-card reveal reveal-delay-2" data-cat="strength">
+      <div class="product-card-img">
+        <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Multi-gym -->
+          <rect x="30" y="20" width="6" height="100" rx="2" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+          <rect x="164" y="20" width="6" height="100" rx="2" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+          <rect x="28" y="18" width="144" height="6" rx="2" fill="#1a1a1a" stroke="#C8A96E" stroke-width="0.5"/>
+          <!-- Weight stack -->
+          <rect x="155" y="35" width="18" height="70" rx="1" fill="#111" stroke="#333" stroke-width="0.5"/>
+          <rect x="157" y="38" width="14" height="6" rx="0.5" fill="#222" stroke="#C8A96E" stroke-width="0.3" opacity="0.8"/>
+          <rect x="157" y="46" width="14" height="6" rx="0.5" fill="#222" stroke="#444" stroke-width="0.3"/>
+          <rect x="157" y="54" width="14" height="6" rx="0.5" fill="#222" stroke="#444" stroke-width="0.3"/>
+          <rect x="157" y="62" width="14" height="6" rx="0.5" fill="#222" stroke="#444" stroke-width="0.3"/>
+          <!-- Cable system -->
+          <line x1="163" y1="35" x2="100" y2="55" stroke="#C8A96E" stroke-width="0.8" opacity="0.5"/>
+          <line x1="163" y1="35" x2="100" y2="85" stroke="#C8A96E" stroke-width="0.8" opacity="0.5"/>
+          <!-- Seat -->
+          <rect x="70" y="90" width="50" height="8" rx="3" fill="#333" stroke="#555" stroke-width="0.5"/>
+          <rect x="90" y="70" width="10" height="22" rx="1" fill="#2a2a2a"/>
+          <!-- Handles -->
+          <path d="M80 60 Q100 45 120 60" stroke="#C8A96E" stroke-width="2" fill="none" opacity="0.6"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="enquire-btn" onclick="enquire('Unica Multi-Gym Station')">Enquire Now</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Strength</div>
+        <div class="product-name">Unica Multi-Gym Station</div>
+        <div class="product-desc">15 exercise stations · 150kg weight stack · 10-year frame warranty</div>
+        <div class="product-price">On Enquiry <span>/ Call for best price</span></div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="product-card reveal reveal-delay-3" data-cat="strength">
+      <div class="product-card-img">
+        <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Adjustable Bench -->
+          <rect x="20" y="90" width="160" height="8" rx="2" fill="#1a1a1a" stroke="#333" stroke-width="0.5"/>
+          <!-- Legs -->
+          <rect x="30" y="88" width="8" height="25" rx="1" fill="#2a2a2a"/>
+          <rect x="162" y="88" width="8" height="25" rx="1" fill="#2a2a2a"/>
+          <!-- Bench pad -->
+          <rect x="25" y="68" width="110" height="24" rx="4" fill="#C8A96E" opacity="0.8"/>
+          <rect x="25" y="68" width="110" height="8" rx="4" fill="#C8A96E"/>
+          <!-- Back pad angled -->
+          <rect x="128" y="52" width="48" height="22" rx="4" fill="#C8A96E" opacity="0.8" transform="rotate(-20 128 52)"/>
+          <!-- Barbell rack posts -->
+          <rect x="140" y="40" width="6" height="55" rx="1" fill="#555"/>
+          <rect x="154" y="40" width="6" height="55" rx="1" fill="#555"/>
+          <!-- Barbell -->
+          <rect x="120" y="48" width="80" height="6" rx="3" fill="#888" stroke="#aaa" stroke-width="0.5"/>
+          <rect x="115" y="44" width="12" height="14" rx="2" fill="#C8A96E" opacity="0.7"/>
+          <rect x="192" y="44" width="12" height="14" rx="2" fill="#C8A96E" opacity="0.7"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="enquire-btn" onclick="enquire('Elite Adjustable Bench')">Enquire Now</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Strength</div>
+        <div class="product-name">Elite Adjustable Bench</div>
+        <div class="product-desc">7 positions · 300kg load capacity · Integrated rack & safeties</div>
+        <div class="product-price">On Enquiry <span>/ Call for best price</span></div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="product-card reveal" data-cat="functional">
+      <div class="product-card-img">
+        <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Functional Trainer / Cable Cross -->
+          <rect x="10" y="20" width="8" height="100" rx="2" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+          <rect x="182" y="20" width="8" height="100" rx="2" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+          <rect x="8" y="18" width="184" height="6" rx="2" fill="#1a1a1a" stroke="#C8A96E" stroke-width="0.8"/>
+          <!-- Pulleys top -->
+          <circle cx="18" cy="22" r="7" fill="#1a1a1a" stroke="#C8A96E" stroke-width="0.8"/>
+          <circle cx="182" cy="22" r="7" fill="#1a1a1a" stroke="#C8A96E" stroke-width="0.8"/>
+          <!-- Cables crossing -->
+          <line x1="18" y1="29" x2="100" y2="90" stroke="#C8A96E" stroke-width="0.8" opacity="0.6"/>
+          <line x1="182" y1="29" x2="100" y2="90" stroke="#C8A96E" stroke-width="0.8" opacity="0.6"/>
+          <!-- Handle -->
+          <ellipse cx="100" cy="92" rx="12" ry="4" fill="#333" stroke="#C8A96E" stroke-width="0.8"/>
+          <!-- Weight stacks -->
+          <rect x="3" y="40" width="12" height="60" rx="1" fill="#111" stroke="#333"/>
+          <rect x="185" y="40" width="12" height="60" rx="1" fill="#111" stroke="#333"/>
+          <rect x="5" y="43" width="8" height="5" fill="#C8A96E" opacity="0.5"/>
+          <rect x="187" y="43" width="8" height="5" fill="#C8A96E" opacity="0.5"/>
+          <rect x="5" y="50" width="8" height="5" fill="#333"/>
+          <rect x="187" y="50" width="8" height="5" fill="#333"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="enquire-btn" onclick="enquire('Forge Functional Trainer')">Enquire Now</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Functional</div>
+        <div class="product-name">Forge Functional Trainer</div>
+        <div class="product-desc">Dual-stack 2×100kg · 360° cable path · 18 attachments included</div>
+        <div class="product-price">On Enquiry <span>/ Call for best price</span></div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="product-card reveal reveal-delay-1" data-cat="cardio">
+      <div class="product-card-img">
+        <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Elliptical Trainer -->
+          <ellipse cx="100" cy="95" rx="70" ry="14" fill="none" stroke="#C8A96E" stroke-width="1.5" opacity="0.5" stroke-dasharray="4 3"/>
+          <rect x="88" y="20" width="6" height="75" rx="1" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+          <rect x="106" y="20" width="6" height="75" rx="1" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+          <rect x="82" y="16" width="36" height="10" rx="3" fill="#111" stroke="#C8A96E" stroke-width="0.8"/>
+          <rect x="86" y="19" width="28" height="4" rx="1" fill="#C8A96E" opacity="0.4"/>
+          <!-- Pedals -->
+          <rect x="44" y="90" width="30" height="10" rx="2" fill="#333" stroke="#C8A96E" stroke-width="0.5"/>
+          <rect x="126" y="90" width="30" height="10" rx="2" fill="#333" stroke="#C8A96E" stroke-width="0.5"/>
+          <!-- Arms -->
+          <line x1="91" y1="65" x2="50" y2="90" stroke="#888" stroke-width="2.5"/>
+          <line x1="109" y1="65" x2="150" y2="90" stroke="#888" stroke-width="2.5"/>
+          <!-- Base -->
+          <rect x="20" y="105" width="160" height="8" rx="3" fill="#1a1a1a" stroke="#333"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="enquire-btn" onclick="enquire('Eclipse Elliptical Trainer')">Enquire Now</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Cardio</div>
+        <div class="product-name">Eclipse Elliptical Trainer</div>
+        <div class="product-desc">32-level resistance · 14" stride · Heart rate monitoring</div>
+        <div class="product-price">On Enquiry <span>/ Call for best price</span></div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="product-card reveal reveal-delay-2" data-cat="strength">
+      <div class="product-card-img">
+        <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Power Rack -->
+          <rect x="45" y="15" width="8" height="105" rx="1" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+          <rect x="147" y="15" width="8" height="105" rx="1" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+          <rect x="43" y="13" width="114" height="8" rx="2" fill="#1a1a1a" stroke="#C8A96E" stroke-width="0.8"/>
+          <!-- Cross bracing -->
+          <line x1="53" y1="30" x2="147" y2="80" stroke="#333" stroke-width="1.5"/>
+          <line x1="147" y1="30" x2="53" y2="80" stroke="#333" stroke-width="1.5"/>
+          <!-- J-hooks -->
+          <rect x="45" y="55" width="16" height="8" rx="1" fill="#C8A96E" opacity="0.7"/>
+          <rect x="139" y="55" width="16" height="8" rx="1" fill="#C8A96E" opacity="0.7"/>
+          <!-- Barbell -->
+          <rect x="20" y="55" width="160" height="8" rx="3" fill="#888" stroke="#aaa" stroke-width="0.5"/>
+          <rect x="10" y="48" width="18" height="22" rx="3" fill="#C8A96E" opacity="0.8"/>
+          <rect x="172" y="48" width="18" height="22" rx="3" fill="#C8A96E" opacity="0.8"/>
+          <!-- Safety bars -->
+          <rect x="45" y="75" width="110" height="5" rx="1" fill="#333" stroke="#555" stroke-width="0.5"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="enquire-btn" onclick="enquire('TitanX Power Rack')">Enquire Now</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Strength</div>
+        <div class="product-name">TitanX Power Rack</div>
+        <div class="product-desc">1000kg capacity · 24 J-hook positions · Pull-up station</div>
+        <div class="product-price">On Enquiry <span>/ Call for best price</span></div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="product-card reveal reveal-delay-3" data-cat="accessories">
+      <div class="product-card-img">
+        <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Dumbbell Set with Rack -->
+          <rect x="20" y="95" width="160" height="20" rx="3" fill="#1a1a1a" stroke="#333"/>
+          <rect x="30" y="80" width="140" height="18" rx="2" fill="#2a2a2a" stroke="#444"/>
+          <!-- Dumbbells on rack -->
+          <rect x="38" y="60" width="20" height="25" rx="2" fill="#C8A96E" opacity="0.8"/>
+          <rect x="43" y="55" width="10" height="8" rx="1" fill="#C8A96E"/>
+          <rect x="68" y="58" width="22" height="27" rx="2" fill="#C8A96E" opacity="0.7"/>
+          <rect x="73" y="53" width="12" height="9" rx="1" fill="#C8A96E" opacity="0.8"/>
+          <rect x="100" y="56" width="24" height="29" rx="2" fill="#C8A96E" opacity="0.6"/>
+          <rect x="106" y="51" width="12" height="9" rx="1" fill="#C8A96E" opacity="0.7"/>
+          <rect x="134" y="54" width="26" height="31" rx="2" fill="#C8A96E" opacity="0.5"/>
+          <rect x="140" y="49" width="14" height="9" rx="1" fill="#C8A96E" opacity="0.6"/>
+          <!-- Weight labels -->
+          <text x="41" y="76" font-size="6" fill="#000" font-weight="bold">5KG</text>
+          <text x="71" y="74" font-size="6" fill="#000" font-weight="bold">10KG</text>
+          <text x="103" y="72" font-size="6" fill="#000" font-weight="bold">15KG</text>
+          <text x="135" y="70" font-size="6" fill="#000" font-weight="bold">20KG</text>
+        </svg>
+        <div class="product-overlay">
+          <button class="enquire-btn" onclick="enquire('Chrome Dumbbell Set 5–40kg')">Enquire Now</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Accessories</div>
+        <div class="product-name">Chrome Dumbbell Set 5–40kg</div>
+        <div class="product-desc">Knurled grip · Hex ends · Storage rack included</div>
+        <div class="product-price">On Enquiry <span>/ Call for best price</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<div class="categories" id="categories">
+  <div class="section-eyebrow reveal" style="margin-bottom:1rem">Shop by Category</div>
+  <h2 class="section-h2 reveal" style="margin-bottom:2.5rem">FIND YOUR<br><span style="color:var(--gold)">EQUIPMENT</span></h2>
+  <div class="cat-grid">
+    <div class="cat-item reveal">
+      <div class="cat-bg cat-bg-treadmill">
+        <svg viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect x="40" y="220" width="120" height="12" rx="3" fill="#2a2a2a" stroke="#C8A96E" stroke-width="0.8"/>
+          <rect x="80" y="100" width="6" height="125" rx="1" fill="#C8A96E" opacity="0.6"/>
+          <rect x="114" y="100" width="6" height="125" rx="1" fill="#C8A96E" opacity="0.6"/>
+          <rect x="75" y="92" width="50" height="14" rx="2" fill="#1a1a1a" stroke="#C8A96E" stroke-width="0.5"/>
+          <rect x="82" y="72" width="36" height="24" rx="3" fill="#111" stroke="#C8A96E" stroke-width="0.8"/>
+          <rect x="87" y="77" width="26" height="14" rx="1" fill="#C8A96E" opacity="0.2"/>
+          <ellipse cx="60" cy="228" rx="14" ry="6" fill="#333"/>
+          <ellipse cx="140" cy="228" rx="14" ry="6" fill="#333"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <span class="cat-label">TREADMILLS</span>
+        <span class="cat-count">24 Products →</span>
+      </div>
+    </div>
+    <div class="cat-item reveal reveal-delay-1">
+      <div class="cat-bg cat-bg-bike">
+        <svg viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <circle cx="70" cy="200" r="45" fill="none" stroke="#C8A96E" stroke-width="2" opacity="0.7"/>
+          <circle cx="70" cy="200" r="20" fill="none" stroke="#C8A96E" stroke-width="1" opacity="0.4"/>
+          <circle cx="70" cy="200" r="6" fill="#C8A96E" opacity="0.8"/>
+          <circle cx="150" cy="210" r="35" fill="none" stroke="#888" stroke-width="1.5"/>
+          <circle cx="150" cy="210" r="5" fill="#888"/>
+          <line x1="70" y1="200" x2="120" y2="160" stroke="#888" stroke-width="3"/>
+          <line x1="120" y1="160" x2="150" y2="210" stroke="#888" stroke-width="3"/>
+          <rect x="112" y="90" width="6" height="75" rx="1" fill="#C8A96E" opacity="0.8"/>
+          <rect x="96" y="84" width="38" height="14" rx="3" fill="#111" stroke="#C8A96E" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <span class="cat-label">BIKES</span>
+        <span class="cat-count">18 Products →</span>
+      </div>
+    </div>
+    <div class="cat-item reveal reveal-delay-2">
+      <div class="cat-bg cat-bg-strength">
+        <svg viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <!-- Barbell overhead press -->
+          <rect x="20" y="155" width="160" height="10" rx="4" fill="#888" stroke="#aaa"/>
+          <rect x="8" y="140" width="28" height="38" rx="4" fill="#C8A96E" opacity="0.8"/>
+          <rect x="164" y="140" width="28" height="38" rx="4" fill="#C8A96E" opacity="0.8"/>
+          <rect x="5" y="148" width="28" height="22" rx="3" fill="#C8A96E" opacity="0.5"/>
+          <rect x="167" y="148" width="28" height="22" rx="3" fill="#C8A96E" opacity="0.5"/>
+          <!-- Person silhouette simplified -->
+          <circle cx="100" cy="90" r="20" fill="#222" stroke="#555"/>
+          <rect x="82" y="108" width="36" height="50" rx="5" fill="#222" stroke="#555"/>
+          <line x1="82" y1="120" x2="28" y2="155" stroke="#555" stroke-width="8" stroke-linecap="round"/>
+          <line x1="118" y1="120" x2="172" y2="155" stroke="#555" stroke-width="8" stroke-linecap="round"/>
+          <rect x="90" y="155" width="20" height="60" rx="4" fill="#222" stroke="#555"/>
+          <rect x="78" y="200" width="18" height="50" rx="4" fill="#222" stroke="#555"/>
+          <rect x="104" y="200" width="18" height="50" rx="4" fill="#222" stroke="#555"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <span class="cat-label">STRENGTH</span>
+        <span class="cat-count">32 Products →</span>
+      </div>
+    </div>
+    <div class="cat-item reveal reveal-delay-3">
+      <div class="cat-bg cat-bg-functional">
+        <svg viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect x="15" y="30" width="10" height="240" rx="2" fill="#2a2a2a" stroke="#555"/>
+          <rect x="175" y="30" width="10" height="240" rx="2" fill="#2a2a2a" stroke="#555"/>
+          <rect x="13" y="26" width="174" height="10" rx="2" fill="#111" stroke="#C8A96E"/>
+          <circle cx="25" cy="35" r="10" fill="#111" stroke="#C8A96E" stroke-width="1.5"/>
+          <circle cx="175" cy="35" r="10" fill="#111" stroke="#C8A96E" stroke-width="1.5"/>
+          <line x1="25" y1="45" x2="100" y2="150" stroke="#C8A96E" stroke-width="1" opacity="0.6"/>
+          <line x1="175" y1="45" x2="100" y2="150" stroke="#C8A96E" stroke-width="1" opacity="0.6"/>
+          <ellipse cx="100" cy="152" rx="16" ry="6" fill="#333" stroke="#C8A96E" stroke-width="0.8"/>
+          <rect x="8" y="60" width="14" height="80" rx="1" fill="#111" stroke="#333"/>
+          <rect x="178" y="60" width="14" height="80" rx="1" fill="#111" stroke="#333"/>
+          <rect x="10" y="64" width="10" height="7" fill="#C8A96E" opacity="0.6"/>
+          <rect x="180" y="64" width="10" height="7" fill="#C8A96E" opacity="0.6"/>
+          <rect x="10" y="73" width="10" height="7" fill="#333"/>
+          <rect x="180" y="73" width="10" height="7" fill="#333"/>
+          <rect x="10" y="82" width="10" height="7" fill="#333"/>
+          <rect x="180" y="82" width="10" height="7" fill="#333"/>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <span class="cat-label">FUNCTIONAL</span>
+        <span class="cat-count">15 Products →</span>
+      </div>
+    </div>
+    <div class="cat-item reveal reveal-delay-4">
+      <div class="cat-bg cat-bg-accessories">
+        <svg viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <!-- Dumbbell -->
+          <rect x="35" y="145" width="130" height="14" rx="5" fill="#888" stroke="#aaa"/>
+          <rect x="18" y="128" width="38" height="48" rx="5" fill="#C8A96E" opacity="0.8"/>
+          <rect x="144" y="128" width="38" height="48" rx="5" fill="#C8A96E" opacity="0.8"/>
+          <rect x="10" y="138" width="32" height="28" rx="3" fill="#C8A96E" opacity="0.5"/>
+          <rect x="158" y="138" width="32" height="28" rx="3" fill="#C8A96E" opacity="0.5"/>
+          <!-- Kettlebell -->
+          <circle cx="100" cy="220" r="35" fill="none" stroke="#C8A96E" stroke-width="2" opacity="0.6"/>
+          <rect x="88" y="183" width="24" height="18" rx="8" fill="none" stroke="#C8A96E" stroke-width="2" opacity="0.6"/>
+          <circle cx="100" cy="222" r="28" fill="#1a1a1a" stroke="#C8A96E" stroke-width="1"/>
+          <text x="87" y="228" font-size="14" fill="#C8A96E" opacity="0.7" font-weight="bold">24K</text>
+        </svg>
+      </div>
+      <div class="cat-overlay"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-content">
+        <span class="cat-label">ACCESSORIES</span>
+        <span class="cat-count">40+ Products →</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE / CTA -->
+<div class="feature-cta" id="contact">
+  <div class="feature-cta-content">
+    <div class="section-eyebrow reveal">Get a Free Quote</div>
+    <h2 class="section-h2 reveal">LET'S BUILD<br>YOUR <span style="color:var(--gold)">DREAM</span><br>GYM</h2>
+    <p class="reveal">Speak with our equipment specialists who will help you design the perfect gym setup for your space and budget. Zero pressure. 100% tailored advice.</p>
+    <div class="cta-actions reveal">
+      <a href="tel:+911800000000" class="cta-phone">
+        <div class="cta-phone-icon">📞</div>
+        1800-000-0000
+      </a>
+      <div class="cta-or">— or drop your number —</div>
+      <div class="form-row">
+        <input type="tel" class="cta-input" placeholder="Your mobile number" id="phoneInput">
+        <button class="cta-submit" onclick="submitEnquiry()">Call Me</button>
+      </div>
+    </div>
+  </div>
+  <div class="feature-cta-visual">
+    <div class="visual-glow"></div>
+    <svg class="visual-main-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Large premium treadmill illustration -->
+      <rect x="60" y="320" width="280" height="20" rx="5" fill="#1a1a1a" stroke="#333"/>
+      <rect x="40" y="325" width="30" height="15" rx="3" fill="#2a2a2a"/>
+      <rect x="330" y="325" width="30" height="15" rx="3" fill="#2a2a2a"/>
+      <rect x="60" y="300" width="280" height="24" rx="4" fill="#222" stroke="#C8A96E" stroke-width="0.8"/>
+      <!-- Running belt texture -->
+      <line x1="80" y1="300" x2="80" y2="324" stroke="#333" stroke-width="1"/>
+      <line x1="120" y1="300" x2="120" y2="324" stroke="#333" stroke-width="1"/>
+      <line x1="160" y1="300" x2="160" y2="324" stroke="#333" stroke-width="1"/>
+      <line x1="200" y1="300" x2="200" y2="324" stroke="#333" stroke-width="1"/>
+      <line x1="240" y1="300" x2="240" y2="324" stroke="#333" stroke-width="1"/>
+      <line x1="280" y1="300" x2="280" y2="324" stroke="#333" stroke-width="1"/>
+      <line x1="320" y1="300" x2="320" y2="324" stroke="#333" stroke-width="1"/>
+      <!-- Uprights -->
+      <rect x="145" y="140" width="10" height="164" rx="2" fill="#2a2a2a" stroke="#555"/>
+      <rect x="245" y="140" width="10" height="164" rx="2" fill="#2a2a2a" stroke="#555"/>
+      <!-- Handlebars -->
+      <rect x="130" y="136" width="140" height="14" rx="4" fill="#1a1a1a" stroke="#C8A96E" stroke-width="1.2"/>
+      <!-- Console -->
+      <rect x="155" y="80" width="90" height="60" rx="8" fill="#0d0d0d" stroke="#C8A96E" stroke-width="1.5"/>
+      <rect x="162" y="87" width="76" height="40" rx="4" fill="#111"/>
+      <!-- Screen glow -->
+      <rect x="165" y="90" width="70" height="34" rx="3" fill="#C8A96E" opacity="0.05"/>
+      <text x="182" y="104" font-size="8" fill="#C8A96E" opacity="0.7">SPEED</text>
+      <text x="182" y="116" font-size="14" fill="#C8A96E" font-weight="bold">12.5</text>
+      <text x="218" y="116" font-size="8" fill="#888">km/h</text>
+      <!-- Heart rate dots -->
+      <circle cx="168" cy="95" r="3" fill="#ff4444" opacity="0.8"/>
+      <circle cx="230" cy="95" r="3" fill="#44ff88" opacity="0.8"/>
+      <!-- Wheels -->
+      <ellipse cx="80" cy="335" rx="18" ry="8" fill="#222" stroke="#555"/>
+      <ellipse cx="320" cy="335" rx="18" ry="8" fill="#222" stroke="#555"/>
+      <!-- Incline mechanism -->
+      <rect x="140" y="290" width="120" height="14" rx="2" fill="#333" stroke="#C8A96E" stroke-width="0.5"/>
+      <!-- Glow accent -->
+      <ellipse cx="200" cy="340" rx="80" ry="10" fill="#C8A96E" opacity="0.05"/>
+    </svg>
+  </div>
+</div>
+
+<!-- WHY US -->
+<section class="why-us">
+  <div class="section-eyebrow reveal">Why Choose Us</div>
+  <h2 class="section-h2 reveal">THE IRONFORGE<br><span style="color:var(--gold)">DIFFERENCE</span></h2>
+  <div class="why-us-grid">
+    <div class="why-item reveal">
+      <div class="why-num">01</div>
+      <div class="why-icon">🏭</div>
+      <h3>Direct from Manufacturer</h3>
+      <p>We source directly from premium manufacturers, eliminating middlemen and passing savings directly to you.</p>
+    </div>
+    <div class="why-item reveal reveal-delay-1">
+      <div class="why-num">02</div>
+      <div class="why-icon">⚡</div>
+      <h3>48-Hour Delivery</h3>
+      <p>Express delivery across all major Indian metros. Your equipment arrives fully packaged, inspection-ready.</p>
+    </div>
+    <div class="why-item reveal reveal-delay-2">
+      <div class="why-num">03</div>
+      <div class="why-icon">🔧</div>
+      <h3>EMI & Financing</h3>
+      <p>Flexible EMI options with 0% interest available through leading banks. No-cost financing for qualified buyers.</p>
+    </div>
+    <div class="why-item reveal reveal-delay-3">
+      <div class="why-num">04</div>
+      <div class="why-icon">🌟</div>
+      <h3>Free Gym Design</h3>
+      <p>Our certified gym designers will create a complete 3D layout plan for your space at absolutely no charge.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-header reveal">
+    <div class="section-eyebrow">Client Stories</div>
+    <h2 class="section-h2">WHAT OUR<br><span style="color:var(--gold)">CLIENTS SAY</span></h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testi-card reveal">
+      <div class="testi-quote-icon">"</div>
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">The consultation process was incredibly thorough. They designed my entire home gym, sourced the equipment, and had it installed within a week. The quality is simply exceptional.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div>
+          <div class="testi-name">Rahul Kapoor</div>
+          <div class="testi-role">Home Gym Owner, Mumbai</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-1">
+      <div class="testi-quote-icon">"</div>
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">We outfitted our entire 4,000 sq ft corporate wellness centre through IronForge. The equipment quality, delivery logistics, and after-sales support have been impeccable.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">P</div>
+        <div>
+          <div class="testi-name">Priya Mehta</div>
+          <div class="testi-role">Director, HealthFirst Corporate</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-2">
+      <div class="testi-quote-icon">"</div>
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">As a professional boxer, equipment quality matters enormously. IronForge understood my specific needs and delivered a functional training setup that's given me a genuine competitive edge.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">A</div>
+        <div>
+          <div class="testi-name">Arjun Singh</div>
+          <div class="testi-role">Professional Athlete, Delhi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands">
+  <div class="brands-inner">
+    <span class="brands-label">Trusted Brands</span>
+    <div class="brand-logos">
+      <span class="brand-name">TECHNOGYM</span>
+      <span class="brand-name">MATRIX</span>
+      <span class="brand-name">LIFE FITNESS</span>
+      <span class="brand-name">PRECOR</span>
+      <span class="brand-name">CYBEX</span>
+      <span class="brand-name">HAMMER</span>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">IRON<span>FORGE</span></a>
+      <p>India's premier destination for commercial-grade gym equipment. Transforming spaces into world-class fitness sanctuaries since 2008.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn" title="Instagram">▣</a>
+        <a href="#" class="social-btn" title="Facebook">f</a>
+        <a href="#" class="social-btn" title="YouTube">▶</a>
+        <a href="#" class="social-btn" title="LinkedIn">in</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Equipment</h4>
+      <ul>
+        <li><a href="#">Treadmills</a></li>
+        <li><a href="#">Exercise Bikes</a></li>
+        <li><a href="#">Elliptical Trainers</a></li>
+        <li><a href="#">Rowing Machines</a></li>
+        <li><a href="#">Strength Equipment</a></li>
+        <li><a href="#">Multi-Gyms</a></li>
+        <li><a href="#">Free Weights</a></li>
+        <li><a href="#">Accessories</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Free Gym Design</a></li>
+        <li><a href="#">Equipment Leasing</a></li>
+        <li><a href="#">Installation</a></li>
+        <li><a href="#">Annual Maintenance</a></li>
+        <li><a href="#">Trade-in Programme</a></li>
+        <li><a href="#">Corporate Wellness</a></li>
+        <li><a href="#">Hotel & Resort Setup</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item">
+        <span>📞</span>
+        <span>1800-000-0000<br><small style="color:#666">Mon–Sat · 9AM–7PM</small></span>
+      </div>
+      <div class="footer-contact-item">
+        <span>✉️</span>
+        <span>hello@ironforge.in</span>
+      </div>
+      <div class="footer-contact-item">
+        <span>📍</span>
+        <span>12, Industrial Estate,<br>Andheri East, Mumbai 400093</span>
+      </div>
+      <div class="footer-contact-item">
+        <span>💬</span>
+        <span>WhatsApp: +91 98765 43210</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 IronForge Premium Fitness Equipment. All rights reserved.</p>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Shipping Policy</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating CTAs -->
+<div class="floating-cta">
+  <a href="https://wa.me/919876543210" class="float-whatsapp" title="Chat on WhatsApp">💬</a>
+  <a href="tel:+911800000000" class="float-btn">📞 Call for Quote</a>
+</div>
+
+<!-- Enquiry Modal -->
+<div id="enquiryModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(10px);">
+  <div style="background:#111;border:1px solid rgba(200,169,110,0.3);padding:3rem;max-width:480px;width:90%;position:relative;clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));">
+    <button onclick="closeModal()" style="position:absolute;top:1rem;right:1.2rem;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:none;">×</button>
+    <div class="section-eyebrow" style="margin-bottom:0.8rem">Get Best Price</div>
+    <h3 style="font-family:var(--font-display);font-size:2rem;margin-bottom:0.5rem;letter-spacing:0.05em" id="modalProductName">Product Enquiry</h3>
+    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:2rem;line-height:1.6">Our specialist will call you with the best price, EMI options, and delivery timeline.</p>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <input type="text" placeholder="Your Name" style="background:rgba(200,169,110,0.06);border:1px solid rgba(200,169,110,0.2);padding:0.9rem 1.2rem;color:var(--off-white);font-family:var(--font-body);font-size:0.85rem;outline:none;width:100%">
+      <input type="tel" placeholder="Mobile Number" style="background:rgba(200,169,110,0.06);border:1px solid rgba(200,169,110,0.2);padding:0.9rem 1.2rem;color:var(--off-white);font-family:var(--font-body);font-size:0.85rem;outline:none;width:100%">
+      <select style="background:rgba(200,169,110,0.06);border:1px solid rgba(200,169,110,0.2);padding:0.9rem 1.2rem;color:var(--off-white);font-family:var(--font-body);font-size:0.85rem;outline:none;width:100%">
+        <option style="background:#111">Purpose: Home Gym</option>
+        <option style="background:#111">Purpose: Commercial Gym</option>
+        <option style="background:#111">Purpose: Corporate</option>
+        <option style="background:#111">Purpose: Hotel / Resort</option>
+      </select>
+      <button onclick="closeModal()" style="background:var(--gold);color:var(--black);border:none;padding:1rem;font-family:var(--font-accent);font-size:0.85rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background 0.3s" onmouseover="this.style.background='#E2C88A'" onmouseout="this.style.background='#C8A96E'">Request Callback →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CURSOR
+  const cursor = document.getElementById('cursor');
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
+  function animRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // ── NAV SCROLL
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── HAMBURGER
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+    document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+  });
+  function closeMobileNav() {
+    hamburger.classList.remove('open');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── SCROLL REVEAL
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ── PRODUCT FILTER
+  function filterProducts(cat, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(card => {
+      const show = cat === 'all' || card.dataset.cat === cat;
+      card.style.display = show ? 'block' : 'none';
+    });
+  }
+
+  // ── ENQUIRY MODAL
+  const modal = document.getElementById('enquiryModal');
+  function enquire(name) {
+    document.getElementById('modalProductName').textContent = name;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+  // ── SUBMIT ENQUIRY
+  function submitEnquiry() {
+    const phone = document.getElementById('phoneInput').value.trim();
+    if (!phone) { document.getElementById('phoneInput').style.borderColor = '#C0392B'; return; }
+    document.getElementById('phoneInput').style.borderColor = '#44ff88';
+    document.getElementById('phoneInput').placeholder = '✓ We\'ll call you shortly!';
+    document.getElementById('phoneInput').value = '';
+    setTimeout(() => { document.getElementById('phoneInput').style.borderColor = 'rgba(200,169,110,0.2)'; document.getElementById('phoneInput').placeholder = 'Your mobile number'; }, 3000);
+  }
+
+  // ── SMOOTH ANCHOR
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  // ── COUNTER ANIMATION
+  function animateCounter(el, end, duration = 1500) {
+    let start = 0, startTime = null;
+    const step = timestamp => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      el.textContent = Math.floor(progress * end) + (el.dataset.suffix || '');
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const statsObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const nums = e.target.querySelectorAll('.stat-num');
+        nums[0] && animateCounter(nums[0], 500, 1200);
+        statsObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.hero-stats').forEach(el => statsObserver.observe(el));
+</script>
+</body>
+</html>
