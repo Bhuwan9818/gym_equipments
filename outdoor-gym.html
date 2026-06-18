@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outdoor Gym Equipment — FITRONFITNESS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/*══════════════════════════════════════════════════
+  DESIGN TOKENS & THEMES (identical to main site)
+══════════════════════════════════════════════════*/
+:root {
+  --gold:#C8A96E; --gold-l:#E2C88A; --gold-d:rgba(200,169,110,0.14);
+  --fd:'Bebas Neue',sans-serif; --fb:'Inter',sans-serif; --fa:'Montserrat',sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --tt:background .4s,color .4s,border-color .4s,box-shadow .4s;
+}
+[data-theme="dark"]{
+  --bg:#080808; --bg2:#111; --bg3:#181818; --bgnav:rgba(8,8,8,.95);
+  --tx:#F5F0E8; --tx2:rgba(245,240,232,.62); --tx3:#6A6A6A;
+  --br:rgba(200,169,110,.11); --brh:rgba(200,169,110,.42);
+  --sh:0 8px 48px rgba(0,0,0,.65); --modal:#111; --inp:rgba(200,169,110,.07);
+}
+[data-theme="light"]{
+  --bg:#F5F1EA; --bg2:#fff; --bg3:#EAE6DF; --bgnav:rgba(245,241,234,.97);
+  --tx:#150F00; --tx2:rgba(21,15,0,.6); --tx3:#9A8E7A;
+  --br:rgba(200,169,110,.22); --brh:rgba(200,169,110,.6);
+  --sh:0 4px 28px rgba(0,0,0,.10); --modal:#fff; --inp:rgba(200,169,110,.08);
+}
+
+/*══════════════════════════════════════════════════
+  RESET
+══════════════════════════════════════════════════*/
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:17px}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);overflow-x:hidden;cursor:none;transition:var(--tt)}
+img{max-width:100%;display:block;object-fit:cover}
+a,button{cursor:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+@media(pointer:coarse){body,a,button{cursor:auto}}
+
+/*══════════════════════════════════════════════════
+  CURSOR
+══════════════════════════════════════════════════*/
+#cur{position:fixed;top:0;left:0;z-index:9999;pointer-events:none}
+#cd{width:7px;height:7px;background:var(--gold);border-radius:50%;position:absolute;transform:translate(-50%,-50%)}
+#cr{width:34px;height:34px;border:1.5px solid var(--gold);border-radius:50%;position:absolute;transform:translate(-50%,-50%);opacity:.55;transition:width .3s,height .3s,opacity .3s,background .3s}
+#cr.h{width:54px;height:54px;opacity:.2;background:var(--gold)}
+@media(pointer:coarse){#cur{display:none}}
+
+/*══════════════════════════════════════════════════
+  NAV
+══════════════════════════════════════════════════*/
+nav{
+  position:sticky;top:0;left:0;right:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.3rem 5vw;
+  background:var(--bgnav);
+  transition:background .4s,backdrop-filter .4s,padding .3s,border-color .4s;
+}
+nav.s{background:var(--bgnav);backdrop-filter:blur(22px);padding:.75rem 5vw;border-bottom:1px solid var(--br)}
+.logo{font-family:var(--fd);font-size:clamp(1.7rem,3.2vw,2.1rem);letter-spacing:.12em;color:var(--tx);text-decoration:none;flex-shrink:0;transition:color .3s}
+.logo em{color:var(--gold);font-style:normal}
+.nav-links{display:flex;gap:clamp(1rem,2.5vw,2.4rem);list-style:none;font-family:var(--fa);font-size:.86rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.nav-links a{color:var(--tx2);text-decoration:none;position:relative;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+.nav-links a:hover{color:var(--tx)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{color:var(--tx)}
+.nav-r{display:flex;align-items:center;gap:.9rem;flex-shrink:0}
+.btn-nav{font-family:var(--fa);font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#080808;background:var(--gold);padding:.68rem 1.65rem;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background .3s,transform .2s;white-space:nowrap}
+.btn-nav:hover{background:var(--gold-l);transform:scale(1.04)}
+.t-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--br);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:1.15rem;transition:var(--tt),transform .3s;flex-shrink:0}
+.t-btn:hover{border-color:var(--gold);transform:rotate(18deg) scale(1.1)}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px}
+.ham span{display:block;width:24px;height:2px;background:var(--tx);transition:.3s}
+.ham.o span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.ham.o span:nth-child(2){opacity:0}
+.ham.o span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-nav{position:fixed;inset:0;background:var(--bg);z-index:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .4s}
+.mob-nav.o{opacity:1;pointer-events:all}
+.mob-nav a{font-family:var(--fd);font-size:clamp(2.3rem,9.5vw,4rem);letter-spacing:.07em;color:var(--tx);text-decoration:none;transition:color .3s}
+.mob-nav a:hover{color:var(--gold)}
+.mob-theme{display:flex;align-items:center;gap:.8rem;font-family:var(--fa);font-size:.85rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--tx3);margin-top:.5rem}
+
+/*══════════════════════════════════════════════════
+  CATEGORY HERO BANNER
+══════════════════════════════════════════════════*/
+.cat-hero{
+  position:relative;
+  height:clamp(380px,55vw,580px);
+  overflow:hidden;
+  background:#080808;
+}
+.cat-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;transition:transform 9s linear}
+.cat-hero:hover .cat-hero-img{transform:scale(1.04)}
+.cat-hero-ov{position:absolute;inset:0;background:linear-gradient(110deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.42) 55%,transparent 100%),linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%)}
+.cat-hero-body{position:absolute;bottom:0;left:0;right:0;padding:0 5vw clamp(3rem,7vh,5rem);max-width:820px}
+.breadcrumb{display:flex;align-items:center;gap:.55rem;font-family:var(--fa);font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:1.1rem}
+.breadcrumb a{color:rgba(245,240,232,.4);text-decoration:none;transition:color .3s}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb span{color:var(--gold)}
+.cat-hero-tag{font-family:var(--fa);font-size:.8rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.cat-hero-tag::before{content:'';width:28px;height:1px;background:var(--gold);flex-shrink:0}
+.cat-hero h1{font-family:var(--fd);font-size:clamp(3rem,8vw,7rem);line-height:.92;letter-spacing:.02em;color:#F5F0E8;margin-bottom:1.1rem}
+.cat-hero h1 .g{color:var(--gold)}
+.cat-hero-sub{font-size:clamp(.9rem,1.8vw,1.08rem);color:rgba(245,240,232,.55);max-width:500px;line-height:1.75;font-weight:300}
+
+/* stats row inside hero */
+.cat-hero-stats{position:absolute;bottom:0;right:5vw;z-index:6;display:flex}
+.chstat{padding:clamp(.8rem,2vh,1.2rem) clamp(.9rem,2.2vw,1.8rem);background:rgba(8,8,8,.62);backdrop-filter:blur(16px);border:1px solid rgba(200,169,110,.15);border-right:none;text-align:center}
+.chstat:last-child{border-right:1px solid rgba(200,169,110,.15)}
+.chstat strong{font-family:var(--fd);font-size:clamp(1.3rem,2.6vw,2rem);color:var(--gold);display:block;letter-spacing:.04em}
+.chstat span{font-family:var(--fa);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(245,240,232,.5)}
+@media(max-width:768px){.cat-hero-stats{display:none}}
+
+/*══════════════════════════════════════════════════
+  MARQUEE (identical)
+══════════════════════════════════════════════════*/
+.mq-strip{background:var(--gold);padding:.82rem 0;overflow:hidden}
+.mq-track{display:flex;gap:2.4rem;animation:mq 22s linear infinite;white-space:nowrap}
+.mq-track span{font-family:var(--fa);font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#080808;flex-shrink:0}
+.mq-track .dot{color:rgba(0,0,0,.3)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/*══════════════════════════════════════════════════
+  SECTION UTILS
+══════════════════════════════════════════════════*/
+.sec{padding:clamp(3.5rem,8vw,7rem) 5vw}
+.eyebrow{font-family:var(--fa);font-size:.82rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem}
+.eyebrow::before{content:'';width:26px;height:1px;background:var(--gold);flex-shrink:0}
+.sh2{font-family:var(--fd);font-size:clamp(2rem,5vw,4.5rem);letter-spacing:.04em;line-height:.95;color:var(--tx)}
+.sh2 .g{color:var(--gold)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.vis{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+/*══════════════════════════════════════════════════
+  FILTER BAR
+══════════════════════════════════════════════════*/
+.filter-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+  padding:1.4rem 5vw;
+  background:var(--bg2);
+  border-bottom:1px solid var(--br);
+  transition:var(--tt);
+  position:sticky;top:72px;z-index:50;
+}
+.filter-left{display:flex;gap:.4rem;flex-wrap:wrap}
+.tab{font-family:var(--fa);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.5rem 1.15rem;background:transparent;color:var(--tx3);border:1px solid var(--br);transition:all .3s}
+.tab.a,.tab:hover{background:var(--gold);color:#080808;border-color:var(--gold)}
+.filter-right{font-family:var(--fa);font-size:.8rem;color:var(--tx3);letter-spacing:.06em}
+.filter-right span{color:var(--gold);font-weight:700}
+
+/*══════════════════════════════════════════════════
+  PRODUCTS GRID (matches main site .pcard)
+══════════════════════════════════════════════════*/
+.prod-sec{background:var(--bg3);transition:var(--tt);padding:clamp(2.5rem,5vw,4.5rem) 5vw}
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px}
+.pcard{background:var(--bg2);border:1px solid var(--br);overflow:hidden;transition:border-color .3s;position:relative}
+.pcard:hover{border-color:var(--brh)}
+.pcard-img{aspect-ratio:1;overflow:hidden;position:relative;background:var(--bg3)}
+.pcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .55s var(--ease)}
+.pcard:hover .pcard-img img{transform:scale(1.07)}
+.pcard-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 55%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:1.1rem}
+.pcard:hover .pcard-over{opacity:1}
+.enq-btn{font-family:var(--fa);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:#080808;padding:.65rem 1rem;border:none;width:100%;transition:background .2s}
+.enq-btn:hover{background:var(--gold-l)}
+.pcard-body{padding:1.1rem 1.2rem}
+.ptag{font-family:var(--fa);font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem}
+.pname{font-family:var(--fa);font-size:1rem;font-weight:700;color:var(--tx);margin-bottom:.25rem}
+.pdesc{font-size:.85rem;color:var(--tx3);line-height:1.55}
+.pprice{font-family:var(--fd);font-size:1.4rem;color:var(--gold);margin-top:.6rem;letter-spacing:.04em}
+.pprice small{font-family:var(--fb);font-size:.74rem;color:var(--tx3)}
+
+/* NEW badge */
+.pcard-badge{position:absolute;top:.85rem;left:.85rem;z-index:2;background:var(--gold);color:#080808;font-family:var(--fa);font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.3rem .75rem}
+
+/*══════════════════════════════════════════════════
+  FEATURE HIGHLIGHT — full bleed image strip
+══════════════════════════════════════════════════*/
+.feat-strip{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:480px;
+  overflow:hidden;
+}
+.feat-img{position:relative;overflow:hidden}
+.feat-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.feat-img:hover img{transform:scale(1.05)}
+.feat-img-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.6))}
+.feat-body{
+  background:var(--bg2);
+  padding:clamp(3rem,5vw,5.5rem) clamp(2.5rem,4.5vw,5rem);
+  display:flex;flex-direction:column;justify-content:center;
+  transition:var(--tt);
+}
+.feat-body p{color:var(--tx2);line-height:1.8;font-size:1.03rem;font-weight:300;margin:.85rem 0}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin:1.4rem 0}
+.feat-list li{display:flex;align-items:center;gap:.7rem;font-family:var(--fa);font-size:.88rem;font-weight:600;color:var(--tx2)}
+.feat-list li::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;flex-shrink:0}
+
+/*══════════════════════════════════════════════════
+  BENEFITS ROW
+══════════════════════════════════════════════════*/
+.benefits{background:var(--bg);padding:clamp(2.5rem,5vw,4.5rem) 5vw;border-top:1px solid var(--br);border-bottom:1px solid var(--br);transition:var(--tt)}
+.benefits-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:2.5rem}
+.bcard{background:var(--bg2);border:1px solid var(--br);padding:clamp(1.5rem,3vw,2.4rem) clamp(1.2rem,2.5vw,2rem);transition:border-color .3s,transform .3s;display:flex;flex-direction:column;gap:.6rem}
+.bcard:hover{border-color:var(--brh);transform:translateY(-3px)}
+.bcard-icon{font-size:1.6rem;line-height:1}
+.bcard h3{font-family:var(--fa);font-size:.96rem;font-weight:700;color:var(--tx)}
+.bcard p{font-size:.84rem;color:var(--tx3);line-height:1.65}
+
+/*══════════════════════════════════════════════════
+  BOTTOM BANNER
+══════════════════════════════════════════════════*/
+.banner{position:relative;overflow:hidden;height:clamp(340px,48vw,560px)}
+.banner img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.banner-ov{position:absolute;inset:0;background:linear-gradient(105deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.3) 55%,transparent 100%)}
+.banner-body{position:absolute;top:50%;left:5vw;transform:translateY(-50%);max-width:580px}
+.banner-body .eyebrow{color:var(--gold)}
+.banner-body h2{font-family:var(--fd);font-size:clamp(2.2rem,5.5vw,5rem);line-height:.95;letter-spacing:.03em;color:#F5F0E8;margin-bottom:1.2rem}
+.banner-body p{color:rgba(245,240,232,.6);font-size:clamp(.9rem,1.7vw,1.05rem);font-weight:300;line-height:1.75;max-width:440px;margin-bottom:1.8rem}
+
+/*══════════════════════════════════════════════════
+  BUTTONS
+══════════════════════════════════════════════════*/
+.btn-p{font-family:var(--fa);font-size:.88rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:#080808;padding:1rem 2.3rem;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));transition:background .3s,transform .2s,box-shadow .3s}
+.btn-p:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:0 12px 36px rgba(200,169,110,.28)}
+.btn-s{font-family:var(--fa);font-size:.88rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#F5F0E8;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(245,240,232,.35);padding-bottom:2px;transition:color .3s,border-color .3s}
+.btn-s:hover{color:var(--gold);border-color:var(--gold)}
+
+@keyframes sdrip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}50.01%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes fup{to{opacity:1;transform:none}}
+@keyframes pr{0%,100%{box-shadow:0 0 0 0 rgba(200,169,110,.4)}50%{box-shadow:0 0 0 10px rgba(200,169,110,0)}}
+@keyframes fp{0%,100%{box-shadow:0 4px 20px rgba(200,169,110,.3)}50%{box-shadow:0 4px 32px rgba(200,169,110,.55)}}
+
+/*══════════════════════════════════════════════════
+  MODAL
+══════════════════════════════════════════════════*/
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px);padding:1rem}
+.modal-bg.open{display:flex}
+.modal{background:var(--modal);border:1px solid var(--br);padding:clamp(1.8rem,4vw,3rem);max-width:480px;width:100%;position:relative;clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));transition:var(--tt)}
+.modal-x{position:absolute;top:.9rem;right:1.1rem;background:none;border:none;color:var(--tx3);font-size:1.4rem;line-height:1;transition:color .3s}
+.modal-x:hover{color:var(--gold)}
+.modal h3{font-family:var(--fd);font-size:clamp(1.6rem,4vw,2rem);letter-spacing:.04em;color:var(--tx);margin:.4rem 0}
+.modal > p{color:var(--tx3);font-size:.92rem;margin-bottom:1.6rem;line-height:1.6}
+.mfields{display:flex;flex-direction:column;gap:.85rem}
+.minp,.msel{background:var(--inp);border:1px solid var(--br);padding:.86rem 1.1rem;color:var(--tx);font-family:var(--fb);font-size:.92rem;outline:none;width:100%;transition:border-color .3s,var(--tt)}
+.minp:focus,.msel:focus{border-color:var(--gold)}
+.minp::placeholder{color:var(--tx3)}
+.msel option{background:var(--modal)}
+.msub{background:var(--gold);color:#080808;border:none;padding:1.05rem;font-family:var(--fa);font-size:.92rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;width:100%;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background .3s}
+.msub:hover{background:var(--gold-l)}
+
+/*══════════════════════════════════════════════════
+  FLOATING CTA
+══════════════════════════════════════════════════*/
+.fcta{position:fixed;bottom:1.4rem;right:1.4rem;z-index:500;display:flex;flex-direction:column;gap:.65rem;align-items:flex-end}
+.f-wa{width:46px;height:46px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.25rem;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,.3);transition:transform .2s}
+.f-wa:hover{transform:scale(1.1)}
+.f-call{background:var(--gold);color:#080808;font-family:var(--fa);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.8rem 1.4rem;border:none;text-decoration:none;display:flex;align-items:center;gap:.45rem;white-space:nowrap;box-shadow:0 4px 20px rgba(200,169,110,.3);animation:fp 3s ease-in-out infinite;transition:transform .2s}
+.f-call:hover{transform:scale(1.05)}
+
+/*══════════════════════════════════════════════════
+  FOOTER
+══════════════════════════════════════════════════*/
+footer{background:var(--bg);border-top:1px solid var(--br);transition:var(--tt)}
+.ft-top{padding:clamp(3rem,6vw,5rem) 5vw clamp(2rem,4vw,3rem);display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(2rem,4vw,4rem)}
+.ft-brand p{font-size:.92rem;color:var(--tx3);line-height:1.8;max-width:260px;margin:.85rem 0 1.3rem}
+.ft-social{display:flex;gap:.6rem}
+.soc{width:36px;height:36px;border:1px solid var(--br);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--tx3);text-decoration:none;transition:all .3s}
+.soc:hover{border-color:var(--gold);color:var(--gold)}
+.ft-col h4{font-family:var(--fa);font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.ft-col ul a{font-size:.92rem;color:var(--tx3);text-decoration:none;transition:color .3s}
+.ft-col ul a:hover{color:var(--tx)}
+.ft-ci{display:flex;align-items:flex-start;gap:.7rem;font-size:.92rem;color:var(--tx3);margin-bottom:.75rem}
+.ft-ci .ic{color:var(--gold);flex-shrink:0;margin-top:.1rem}
+.ft-bot{padding:1.2rem 5vw;border-top:1px solid var(--br);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
+.ft-bot p,.ft-bot a{font-size:.82rem;color:var(--tx3)}
+.ft-bot a:hover{color:var(--gold)}
+.ft-legal{display:flex;gap:1.4rem;flex-wrap:wrap}
+.ft-legal a{text-decoration:none;transition:color .3s}
+
+/*══════════════════════════════════════════════════
+  RESPONSIVE
+══════════════════════════════════════════════════*/
+@media(max-width:1280px){
+  .prod-grid{grid-template-columns:repeat(3,1fr)}
+  .ft-top{grid-template-columns:1fr 1fr}
+  .benefits-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:1024px){
+  .nav-links,.btn-nav{display:none}
+  .ham{display:flex}
+  .prod-grid{grid-template-columns:repeat(2,1fr)}
+  .feat-strip{grid-template-columns:1fr}
+  .benefits-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .prod-grid{grid-template-columns:repeat(2,1fr)}
+  .ft-top{grid-template-columns:1fr 1fr;gap:2rem}
+  .filter-bar{top:60px}
+}
+@media(max-width:480px){
+  .prod-grid{grid-template-columns:1fr}
+  .benefits-grid{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr}
+  .ft-bot{flex-direction:column;align-items:flex-start}
+  .ft-legal{flex-wrap:wrap;gap:.9rem}
+  .fcta{bottom:1rem;right:1rem}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"><div id="cr"></div><div id="cd"></div></div>
+
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav">
+  <a href="index.html" onclick="closeMob()">Home</a>
+  <a href="index.html#products" onclick="closeMob()">Products</a>
+  <a href="index.html#categories" onclick="closeMob()">Categories</a>
+  <a href="index.html#about" onclick="closeMob()">About</a>
+  <a href="index.html#testimonials" onclick="closeMob()">Reviews</a>
+  <a href="index.html#contact" onclick="closeMob()">Contact</a>
+  <div class="mob-theme">
+    <span id="mobThLbl">Light Mode</span>
+    <button class="t-btn" onclick="toggleTheme()" style="cursor:none" id="mobThBtn">☀️</button>
+  </div>
+  <a href="tel:+911800000000" class="btn-p" style="font-size:.95rem;margin-top:.5rem">📞 Call for Quote</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="index.html" class="logo">FITRON<em>FITNESS</em></a>
+  <ul class="nav-links">
+    <li><a href="index.html#products">Products</a></li>
+    <li><a href="index.html#categories" class="active">Categories</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#testimonials">Reviews</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-r">
+    <button class="t-btn" onclick="toggleTheme()" id="deskThBtn" aria-label="Toggle theme">☀️</button>
+    <a href="tel:+911800000000" class="btn-nav">📞 Get Quote</a>
+    <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ══ CATEGORY HERO ══ -->
+<section class="cat-hero">
+  <img class="cat-hero-img" src="images/ourdoor_banner1.jpg" alt="Outdoor Gym Equipment" loading="eager" decoding="async">
+  <div class="cat-hero-ov"></div>
+  <div class="cat-hero-body">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <a href="index.html#categories">Categories</a>
+      <span>›</span>
+      <span>Outdoor Gym</span>
+    </div>
+    <div class="cat-hero-tag">Premium Outdoor Fitness · Weather-Resistant</div>
+    <h1>OUTDOOR <span class="g">GYM</span><br>EQUIPMENT</h1>
+    <p class="cat-hero-sub">Commercial-grade outdoor fitness stations engineered for Indian weather. From parks and housing societies to corporate campuses — built to outlast the elements.</p>
+  </div>
+  <div class="cat-hero-stats">
+    <div class="chstat"><strong>18+</strong><span>Products</span></div>
+    <div class="chstat"><strong>SS316</strong><span>Grade Steel</span></div>
+    <div class="chstat"><strong>10yr</strong><span>Warranty</span></div>
+    <div class="chstat"><strong>IP68</strong><span>Weather Proof</span></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq-strip" aria-hidden="true">
+  <div class="mq-track">
+    <span>Outdoor Pull-Up Stations</span><span class="dot">✦</span><span>Park Fitness Equipment</span><span class="dot">✦</span><span>Outdoor Ellipticals</span><span class="dot">✦</span><span>Parallel Bars</span><span class="dot">✦</span><span>Outdoor Chest Press</span><span class="dot">✦</span><span>Balance Boards</span><span class="dot">✦</span><span>Leg Press Stations</span><span class="dot">✦</span><span>Sit-Up Benches</span><span class="dot">✦</span><span>Multi-Station Rigs</span><span class="dot">✦</span>
+    <span>Outdoor Pull-Up Stations</span><span class="dot">✦</span><span>Park Fitness Equipment</span><span class="dot">✦</span><span>Outdoor Ellipticals</span><span class="dot">✦</span><span>Parallel Bars</span><span class="dot">✦</span><span>Outdoor Chest Press</span><span class="dot">✦</span><span>Balance Boards</span><span class="dot">✦</span><span>Leg Press Stations</span><span class="dot">✦</span><span>Sit-Up Benches</span><span class="dot">✦</span><span>Multi-Station Rigs</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ══ FILTER BAR ══ -->
+<div class="filter-bar">
+  <div class="filter-left">
+    <button class="tab a" onclick="filterProd('all',this)">All Equipment</button>
+    <button class="tab" onclick="filterProd('strength',this)">Strength</button>
+    <button class="tab" onclick="filterProd('cardio',this)">Cardio</button>
+    <button class="tab" onclick="filterProd('functional',this)">Functional</button>
+    <button class="tab" onclick="filterProd('multistation',this)">Multi-Station</button>
+  </div>
+  <div class="filter-right">Showing <span id="prodCount">5</span> products</div>
+</div>
+
+<!-- ══ PRODUCTS GRID ══ -->
+<section class="prod-sec" id="products">
+  <div class="prod-grid" id="prodGrid">
+
+    <!-- Product 1 -->
+    <div class="pcard reveal" data-cat="strength">
+      <div class="pcard-badge">Bestseller</div>
+      <div class="pcard-img">
+        <img src="images/Outdoor-Gym-Playground-Exercise-Stationary-Bike-for-Your-Open-Air-Workouts.avif" alt="Outdoor Pull-Up & Dip Station">
+        <div class="pcard-over"><button class="enq-btn" onclick="enquire('Titan Outdoor Pull-Up & Dip Station')">Enquire Now</button></div>
+      </div>
+      <div class="pcard-body">
+        <div class="ptag">Strength · Outdoor</div>
+        <div class="pname">Titan Pull-Up & Dip Station</div>
+        <div class="pdesc">SS316 stainless steel · Multi-grip bars · 250kg load rating · Powder-coated finish</div>
+        <div class="pprice">On Enquiry <small>/ Call for best price</small></div>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="pcard reveal d1" data-cat="cardio">
+      <div class="pcard-img">
+        <img src="images/outdoor-gym-equipment.jpg" alt="Outdoor Elliptical Trainer">
+        <div class="pcard-over"><button class="enq-btn" onclick="enquire('AirStride Outdoor Elliptical Trainer')">Enquire Now</button></div>
+      </div>
+      <div class="pcard-body">
+        <div class="ptag">Cardio · Outdoor</div>
+        <div class="pname">AirStride Outdoor Elliptical</div>
+        <div class="pdesc">Self-powered · Zero electricity · IP68 weatherproof · Sealed bearing system</div>
+        <div class="pprice">On Enquiry <small>/ Call for best price</small></div>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="pcard reveal d2" data-cat="functional">
+      <div class="pcard-badge">New</div>
+      <div class="pcard-img">
+        <img src="images/Public-3-in-1-Outdoor-Gym-Equipment-Near-Me.avif" alt="Outdoor Leg Press Station">
+        <div class="pcard-over"><button class="enq-btn" onclick="enquire('GroundForce Outdoor Leg Press')">Enquire Now</button></div>
+      </div>
+      <div class="pcard-body">
+        <div class="ptag">Functional · Outdoor</div>
+        <div class="pname">GroundForce Leg Press Station</div>
+        <div class="pdesc">Adjustable footplate · 8 resistance levels · Anti-corrosion galvanized steel · All-weather</div>
+        <div class="pprice">On Enquiry <small>/ Call for best price</small></div>
+      </div>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="pcard reveal d3" data-cat="multistation">
+      <div class="pcard-img">
+        <img src="images/exercise-equipment-in-a-public-park-i-in-residential-area-photo.jpg" alt="Outdoor Multi-Station Rig">
+        <div class="pcard-over"><button class="enq-btn" onclick="enquire('ParkPro Multi-Station Rig')">Enquire Now</button></div>
+      </div>
+      <div class="pcard-body">
+        <div class="ptag">Multi-Station · Outdoor</div>
+        <div class="pname">ParkPro Multi-Station Rig</div>
+        <div class="pdesc">8-user simultaneous · Pull-up, dip, chest, back stations · Modular add-on system</div>
+        <div class="pprice">On Enquiry <small>/ Call for best price</small></div>
+      </div>
+    </div>
+
+    <!-- Product 5 -->
+    <div class="pcard reveal d4" data-cat="strength">
+      <div class="pcard-img">
+        <img src="images/outdoor_gym_equip.jpeg" alt="Outdoor Chest Press Station">
+        <div class="pcard-over"><button class="enq-btn" onclick="enquire('SteelCore Outdoor Chest Press')">Enquire Now</button></div>
+      </div>
+      <div class="pcard-body">
+        <div class="ptag">Strength · Outdoor</div>
+        <div class="pname">SteelCore Outdoor Chest Press</div>
+        <div class="pdesc">Dual-action push & fly motion · Self-weighted resistance · UV-stabilised grips · Zero maintenance</div>
+        <div class="pprice">On Enquiry <small>/ Call for best price</small></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ FEATURE STRIP — WHY OUTDOOR ══ -->
+<!-- <div class="feat-strip">
+  <div class="feat-img reveal">
+    <img src="images/home_gym.webp" alt="Outdoor fitness in action" loading="lazy">
+    <div class="feat-img-ov"></div>
+  </div>
+  <div class="feat-body reveal d1">
+    <div class="eyebrow">Built for India</div>
+    <h2 class="sh2">DESIGNED FOR<br>OUTDOOR <span class="g">EXTREMES</span></h2>
+    <p>Every outdoor unit in our range is engineered for India's harshest climate conditions — monsoon rains, peak summer heat, and coastal salt air.</p>
+    <p>We use marine-grade SS316 stainless steel with polyester powder coating and UV-stable grip materials rated to 10 years of uninterrupted outdoor use.</p>
+    <ul class="feat-list">
+      <li>Marine-grade SS316 stainless steel construction</li>
+      <li>IP68 rated — fully weatherproof in any condition</li>
+      <li>UV-stabilised grip handles, rated for extreme heat</li>
+      <li>Sealed maintenance-free bearing assemblies</li>
+      <li>Vandal-resistant fasteners on all units</li>
+      <li>Meets IS 16671 outdoor fitness equipment standard</li>
+    </ul>
+    <a href="index.html#contact" class="btn-p">Request a Site Survey →</a>
+  </div>
+</div> -->
+
+<!-- ══ BENEFITS ROW ══ -->
+<div class="benefits">
+  <div class="eyebrow reveal">Why Choose Our Outdoor Range</div>
+  <h2 class="sh2 reveal">THE <span class="g">OUTDOOR</span> ADVANTAGE</h2>
+  <div class="benefits-grid">
+    <div class="bcard reveal d1">
+      <div class="bcard-icon">🏗️</div>
+      <h3>Free Installation</h3>
+      <p>Full anchor and foundation installation included across Delhi-NCR. Pan-India installation teams available on request.</p>
+    </div>
+    <div class="bcard reveal d2">
+      <div class="bcard-icon">🛡️</div>
+      <h3>10-Year Frame Warranty</h3>
+      <p>Industry-leading decade-long structural warranty covers rust, corrosion, and weld integrity on all outdoor units.</p>
+    </div>
+    <div class="bcard reveal d3">
+      <div class="bcard-icon">📐</div>
+      <h3>Custom Layout Design</h3>
+      <p>Our team visits your site, measures the space, and creates a professional fitness zone layout — completely free of charge.</p>
+    </div>
+    <div class="bcard reveal d4">
+      <div class="bcard-icon">🔧</div>
+      <h3>Zero Maintenance</h3>
+      <p>All units are self-powered and require no electricity or lubrication. Annual safety inspection included in the first year.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM BANNER ══ -->
+<div class="banner reveal" style="margin-top:3px">
+  <img src="images/full_gym.jpg" alt="Complete outdoor fitness zone" loading="lazy">
+  <div class="banner-ov"></div>
+  <div class="banner-body">
+    <div class="eyebrow">For Societies & Corporates</div>
+    <h2>BUILD AN OUTDOOR<br>FITNESS ZONE<br><span style="color:var(--gold)">FROM ₹2.5 LAKHS</span></h2>
+    <p>Complete outdoor gym setups for residential societies, parks, corporate campuses, and schools. Turnkey project management — one call handles everything.</p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap">
+      <a href="index.html#contact" class="btn-p">Get a Project Quote →</a>
+      <a href="tel:+911800000000" class="btn-s">📞 Call for Details</a>
+    </div>
+  </div>
+</div>
+
+<!-- BRANDS -->
+<div style="padding:clamp(2rem,4vw,3.5rem) 5vw;border-top:1px solid var(--br);display:flex;align-items:center;gap:3rem;flex-wrap:wrap;justify-content:center;background:var(--bg)">
+  <span style="font-family:var(--fa);font-size:.7rem;font-weight:600;letter-spacing:.17em;text-transform:uppercase;color:var(--tx3);white-space:nowrap">Trusted Brands</span>
+  <div style="display:flex;gap:clamp(1.5rem,4vw,3.5rem);align-items:center;flex-wrap:wrap;justify-content:center">
+    <span style="font-family:var(--fd);font-size:clamp(1rem,2.1vw,1.35rem);letter-spacing:.12em;color:var(--tx3);opacity:.45;transition:all .3s">TECHNOGYM</span>
+    <span style="font-family:var(--fd);font-size:clamp(1rem,2.1vw,1.35rem);letter-spacing:.12em;color:var(--tx3);opacity:.45;transition:all .3s">MATRIX</span>
+    <span style="font-family:var(--fd);font-size:clamp(1rem,2.1vw,1.35rem);letter-spacing:.12em;color:var(--tx3);opacity:.45;transition:all .3s">LIFE FITNESS</span>
+    <span style="font-family:var(--fd);font-size:clamp(1rem,2.1vw,1.35rem);letter-spacing:.12em;color:var(--tx3);opacity:.45;transition:all .3s">PRECOR</span>
+    <span style="font-family:var(--fd);font-size:clamp(1rem,2.1vw,1.35rem);letter-spacing:.12em;color:var(--tx3);opacity:.45;transition:all .3s">HAMMER</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div class="ft-brand">
+      <a href="index.html" class="logo" style="display:block;margin-bottom:.8rem">FITRON<em>FITNESS</em></a>
+      <p>India's premier destination for commercial-grade gym equipment. Transforming spaces into world-class fitness sanctuaries since 2008.</p>
+      <div class="ft-social">
+        <a href="#" class="soc" aria-label="Instagram">▣</a>
+        <a href="#" class="soc" aria-label="Facebook">f</a>
+        <a href="#" class="soc" aria-label="YouTube">▶</a>
+        <a href="#" class="soc" aria-label="LinkedIn">in</a>
+      </div>
+    </div>
+    <div class="ft-col">
+      <h4>Equipment</h4>
+      <ul>
+        <li><a href="#">Treadmills</a></li>
+        <li><a href="#">Exercise Bikes</a></li>
+        <li><a href="#">Elliptical Trainers</a></li>
+        <li><a href="#">Strength Equipment</a></li>
+        <li><a href="#" style="color:var(--gold)">Outdoor Gym ↗</a></li>
+        <li><a href="#">Multi-Gyms</a></li>
+        <li><a href="#">Accessories</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Free Gym Design</a></li>
+        <li><a href="#">Outdoor Installation</a></li>
+        <li><a href="#">Annual Maintenance</a></li>
+        <li><a href="#">Corporate Wellness</a></li>
+        <li><a href="#">Park & Society Setup</a></li>
+        <li><a href="#">Trade-in Programme</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Contact</h4>
+      <div class="ft-ci"><span class="ic">📞</span><span>99111 15960<br><small>Mon–Sat · 9AM–7PM</small></span></div>
+      <div class="ft-ci"><span class="ic">✉️</span><span>shashank995390@gmail.com</span></div>
+      <div class="ft-ci"><span class="ic">📍</span><span>Ground Floor, Plot No. 660, Bhalswa Jahangir Puri, New Delhi – 110033</span></div>
+      <div class="ft-ci"><span class="ic">💬</span><span>WhatsApp: +91 98111 5960</span></div>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <p>© 2024 FITRONFITNESS Premium Fitness Equipment. All rights reserved.</p>
+    <div class="ft-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Shipping Policy</a>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING CTA -->
+<div class="fcta">
+  <a href="https://wa.me/919876543210" class="f-wa" aria-label="WhatsApp">💬</a>
+  <a href="tel:+911800000000" class="f-call">📞 Call for Quote</a>
+</div>
+
+<!-- ENQUIRY MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal()">×</button>
+    <div class="eyebrow" style="margin-bottom:.4rem">Get Best Price</div>
+    <h3 id="modalName">Product Enquiry</h3>
+    <p>Our outdoor fitness specialist will contact you with pricing, site survey details, and installation timeline.</p>
+    <div class="mfields">
+      <input type="text" class="minp" placeholder="Your Name">
+      <input type="tel" class="minp" placeholder="Mobile Number">
+      <select class="msel">
+        <option>Installation: Residential Society</option>
+        <option>Installation: Corporate Campus</option>
+        <option>Installation: Public Park</option>
+        <option>Installation: School / College</option>
+        <option>Installation: Hotel / Resort</option>
+        <option>Installation: Other</option>
+      </select>
+      <button class="msub" onclick="closeModal()">Request Callback →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─ THEME ─ */
+const html=document.documentElement;
+let theme=localStorage.getItem('ig-theme')||'dark';
+function applyTheme(t){
+  html.setAttribute('data-theme',t);
+  localStorage.setItem('ig-theme',t);
+  const d=t==='dark';
+  document.getElementById('deskThBtn').textContent=d?'☀️':'🌙';
+  document.getElementById('mobThBtn').textContent=d?'☀️':'🌙';
+  document.getElementById('mobThLbl').textContent=d?'Light Mode':'Dark Mode';
+}
+function toggleTheme(){theme=theme==='dark'?'light':'dark';applyTheme(theme)}
+applyTheme(theme);
+
+/* ─ CURSOR ─ */
+const cd=document.getElementById('cd'),cr=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+if(window.matchMedia('(pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px'});
+  document.addEventListener('mouseover',e=>{cr.classList.toggle('h',!!e.target.closest('a,button'))});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop)})();
+}
+
+/* ─ NAV ─ */
+const navEl=document.getElementById('nav');
+window.addEventListener('scroll',()=>navEl.classList.toggle('s',scrollY>60),{passive:true});
+
+/* ─ HAMBURGER ─ */
+const ham=document.getElementById('ham'),mob=document.getElementById('mobNav');
+ham.addEventListener('click',()=>{const o=ham.classList.toggle('o');mob.classList.toggle('o',o);document.body.style.overflow=o?'hidden':''});
+function closeMob(){ham.classList.remove('o');mob.classList.remove('o');document.body.style.overflow=''}
+
+/* ─ REVEAL ─ */
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');ro.unobserve(e.target)}}),{threshold:.1,rootMargin:'0px 0px -36px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+/* ─ PRODUCT FILTER ─ */
+function filterProd(cat,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('a'));
+  btn.classList.add('a');
+  let count=0;
+  document.querySelectorAll('.pcard').forEach(c=>{
+    const show=cat==='all'||c.dataset.cat===cat;
+    c.style.display=show?'':'none';
+    if(show)count++;
+  });
+  document.getElementById('prodCount').textContent=count;
+}
+
+/* ─ MODAL ─ */
+const modal=document.getElementById('modal');
+function enquire(n){document.getElementById('modalName').textContent=n;modal.classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(){modal.classList.remove('open');document.body.style.overflow=''}
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+</script>
+</body>
+</html>
